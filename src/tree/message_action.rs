@@ -4,6 +4,7 @@
 //! computation on message application.
 
 use crate::cow_bytes::{CowBytes, SlicedCowBytes};
+use serde::{ Serialize, Deserialize };
 use bincode::{deserialize, serialize_into};
 use std::fmt::Debug;
 use std::ops::Deref;

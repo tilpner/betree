@@ -2,7 +2,7 @@
 
 use crate::size::{Size, StaticSize};
 use serde::de::DeserializeOwned;
-use serde::Serialize;
+use serde::{ Serialize, Deserialize };
 use std::error::Error;
 use std::fmt;
 use std::hash::Hasher;

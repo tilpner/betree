@@ -1,4 +1,5 @@
 use crate::size::StaticSize;
+use serde::{ Serialize, Deserialize };
 use std::io;
 
 /// No-op compression.

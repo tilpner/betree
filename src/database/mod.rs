@@ -14,7 +14,7 @@ use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use parking_lot::{Mutex, RwLock};
 use seqlock::SeqLock;
 use serde::de::DeserializeOwned;
-use serde::Serialize;
+use serde::{ Serialize, Deserialize };
 use std::collections::HashMap;
 use std::iter::FromIterator;
 use std::mem::replace;

@@ -8,9 +8,12 @@ extern crate parking_lot;
 extern crate rand;
 extern crate scoped_threadpool;
 extern crate serde;
-#[macro_use]
-extern crate serde_derive;
 extern crate unbytify;
+
+extern crate jemallocator;
+
+#[global_allocator]
+static ALLOC: jemallocator::Jemalloc = jemallocator::Jemalloc;
 
 use betree_storage_stack::allocator::{Action, SegmentAllocator, SegmentId, SEGMENT_SIZE};
 use betree_storage_stack::atomic_option::AtomicOption;
@@ -37,7 +40,7 @@ use rand::{RngCore, SeedableRng};
 use rand_xorshift::XorShiftRng;
 use scoped_threadpool::Pool;
 use serde::de::DeserializeOwned;
-use serde::Serialize;
+use serde::{ Serialize, Deserialize };
 use std::error::Error;
 use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
 use std::fs::OpenOptions;
@@ -296,7 +299,7 @@ fn main() {
                 .takes_value(true)
                 .validator(|s| match parse_size(&s, 1, 128 * 1024) {
                     Ok(_) => Ok(()),
-                    Err(e) => Err(e.description().to_string()),
+                    Err(e) => Err(e.to_string()),
                 }),
         )
         .arg(
@@ -307,7 +310,7 @@ fn main() {
                 .validator(
                     |s| match parse_size(&s, 256 * 1024 * 1024, 16 * 1024 * 1024 * 1024) {
                         Ok(_) => Ok(()),
-                        Err(e) => Err(e.description().to_string()),
+                        Err(e) => Err(e.to_string()),
                     },
                 ),
         )
@@ -318,7 +321,7 @@ fn main() {
                 .takes_value(true)
                 .validator(|s| match parse_size(&s, None, None) {
                     Ok(_) => Ok(()),
-                    Err(e) => Err(e.description().to_string()),
+                    Err(e) => Err(e.to_string()),
                 }),
         )
         .arg(
@@ -329,7 +332,7 @@ fn main() {
                 .conflicts_with("iterations")
                 .validator(|s| match parse_size(&s, None, None) {
                     Ok(_) => Ok(()),
-                    Err(e) => Err(e.description().to_string()),
+                    Err(e) => Err(e.to_string()),
                 }),
         )
         .arg(
@@ -339,7 +342,7 @@ fn main() {
                 .takes_value(true)
                 .validator(|s| match parse_size(&s, None, None) {
                     Ok(_) => Ok(()),
-                    Err(e) => Err(e.description().to_string()),
+                    Err(e) => Err(e.to_string()),
                 }),
         )
         .arg(
@@ -348,7 +351,7 @@ fn main() {
                 .takes_value(true)
                 .validator(|s| match usize::from_str(&s) {
                     Ok(_) => Ok(()),
-                    Err(e) => Err(e.description().to_string()),
+                    Err(e) => Err(e.to_string()),
                 }),
         )
         .get_matches();
@@ -407,7 +410,7 @@ fn run<K: KeyGenerator>(
     block_size: u64,
     cache_size: u64,
     iterations: u64,
-    sync: bool,
+    _sync: bool,
     write: bool,
     verify: bool,
 ) -> Result<(), Box<dyn Error>> {
@@ -429,7 +432,7 @@ fn run<K: KeyGenerator>(
     //     "/dev/disk/by-id/ata-ST3500418AS_9VM5SJB5",
     //     "/dev/disk/by-id/ata-ST3500418AS_9VM5V4MJ",
     // ];
-    let disks = ["/var/tmp/write_test"];
+    let disks = ["/var/tmp/write_test", "/var/tmp/write_test2"];
 
     let cfg = Configuration::new(
         // vec![

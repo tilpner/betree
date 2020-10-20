@@ -3,6 +3,7 @@ use crate::cow_bytes::{CowBytes, SlicedCowBytes};
 use crate::size::{Size, SizeMut, StaticSize};
 use crate::tree::MessageAction;
 use parking_lot::RwLock;
+use serde::{ Serialize, Deserialize };
 use std::borrow::Borrow;
 use std::cmp;
 use std::collections::BTreeMap;

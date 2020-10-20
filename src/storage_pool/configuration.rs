@@ -4,6 +4,7 @@ use crate::vdev::{self, Vdev as VdevTrait, VdevBoxed};
 use itertools::Itertools;
 use libc;
 use ref_slice::ref_slice;
+use serde::{ Serialize, Deserialize };
 use std::fmt;
 use std::fmt::Write;
 use std::fs::OpenOptions;
