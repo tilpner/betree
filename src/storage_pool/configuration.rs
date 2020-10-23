@@ -1,9 +1,12 @@
 //! Storage Pool configuration.
-use crate::checksum::Checksum;
-use crate::vdev::{self, Vdev as VdevTrait, VdevBoxed};
+use crate::{
+    checksum::Checksum,
+    vdev::{self, Vdev as VdevTrait, VdevBoxed},
+};
 use itertools::Itertools;
 use libc;
 use ref_slice::ref_slice;
+<<<<<<< Updated upstream
 use serde::{ Serialize, Deserialize };
 use std::fmt;
 use std::fmt::Write;
@@ -12,6 +15,11 @@ use std::io;
 use std::iter::FromIterator;
 use std::os::unix::io::AsRawFd;
 use std::path::PathBuf;
+=======
+use std::{
+    fmt, fmt::Write, fs::OpenOptions, io, iter::FromIterator, os::unix::io::AsRawFd, path::PathBuf,
+};
+>>>>>>> Stashed changes
 
 /// `Configuration` type for `StoragePoolUnit`.
 #[derive(Debug, Serialize, Deserialize)]

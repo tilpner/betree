@@ -1,12 +1,9 @@
 //! This module provides a `Checksum` trait for verifying data integrity.
 
 use crate::size::{Size, StaticSize};
-use serde::de::DeserializeOwned;
-use serde::{ Serialize, Deserialize };
-use std::error::Error;
-use std::fmt;
-use std::hash::Hasher;
-use std::iter::once;
+use serde::{de::DeserializeOwned, Serialize, Deserialize};
+use std::{error::Error, fmt, hash::Hasher, iter::once};
+>>>>>>> Stashed changes
 use twox_hash;
 
 /// A checksum to verify data integrity.

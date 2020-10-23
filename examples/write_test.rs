@@ -15,23 +15,21 @@ extern crate jemallocator;
 #[global_allocator]
 static ALLOC: jemallocator::Jemalloc = jemallocator::Jemalloc;
 
-use betree_storage_stack::allocator::{Action, SegmentAllocator, SegmentId, SEGMENT_SIZE};
-use betree_storage_stack::atomic_option::AtomicOption;
-use betree_storage_stack::cache::{Cache, ClockCache};
-use betree_storage_stack::checksum::{XxHash, XxHashBuilder};
-use betree_storage_stack::compression;
-use betree_storage_stack::cow_bytes::{CowBytes, SlicedCowBytes};
-use betree_storage_stack::data_management::{
-    self, Dml, Dmu, Handler as HandlerTrait, HandlerDml, ObjectRef,
+use betree_storage_stack::{
+    allocator::{Action, SegmentAllocator, SegmentId, SEGMENT_SIZE},
+    atomic_option::AtomicOption,
+    cache::{Cache, ClockCache},
+    checksum::{XxHash, XxHashBuilder},
+    compression,
+    cow_bytes::{CowBytes, SlicedCowBytes},
+    data_management::{self, Dml, Dmu, Handler as HandlerTrait, HandlerDml, ObjectRef},
+    storage_pool::{configuration, Configuration, DiskOffset, StoragePoolLayer, StoragePoolUnit},
+    tree::{
+        DefaultMessageAction, Error as TreeError, Inner as TreeInner, Node, Tree, TreeBaseLayer,
+        TreeLayer,
+    },
+    vdev::{Block, BLOCK_SIZE},
 };
-use betree_storage_stack::storage_pool::{
-    configuration, Configuration, DiskOffset, StoragePoolLayer, StoragePoolUnit,
-};
-use betree_storage_stack::tree::{
-    DefaultMessageAction, Error as TreeError, Inner as TreeInner, Node, Tree, TreeBaseLayer,
-    TreeLayer,
-};
-use betree_storage_stack::vdev::{Block, BLOCK_SIZE};
 use byteorder::{BigEndian, ByteOrder, NativeEndian};
 use clap::{App, Arg};
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
@@ -39,18 +37,21 @@ use parking_lot::Mutex;
 use rand::{RngCore, SeedableRng};
 use rand_xorshift::XorShiftRng;
 use scoped_threadpool::Pool;
-use serde::de::DeserializeOwned;
-use serde::{ Serialize, Deserialize };
-use std::error::Error;
-use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
-use std::fs::OpenOptions;
-use std::io::Read;
-use std::mem::replace;
-use std::ops::Deref;
-use std::str::FromStr;
-use std::sync::atomic::{AtomicU64, Ordering};
-use std::sync::Arc;
-use std::time::Instant;
+use serde::{de::DeserializeOwned, Serialize};
+use std::{
+    error::Error,
+    fmt::{Debug, Display, Formatter, Result as FmtResult},
+    fs::OpenOptions,
+    io::Read,
+    mem::replace,
+    ops::Deref,
+    str::FromStr,
+    sync::{
+        atomic::{AtomicU64, Ordering},
+        Arc,
+    },
+    time::Instant,
+};
 
 struct Size(pub u64);
 
@@ -432,7 +433,11 @@ fn run<K: KeyGenerator>(
     //     "/dev/disk/by-id/ata-ST3500418AS_9VM5SJB5",
     //     "/dev/disk/by-id/ata-ST3500418AS_9VM5V4MJ",
     // ];
+<<<<<<< Updated upstream
     let disks = ["/var/tmp/write_test", "/var/tmp/write_test2"];
+=======
+    let disks = ["/dev/zvol/fpool/betree/d1"];
+>>>>>>> Stashed changes
 
     let cfg = Configuration::new(
         // vec![

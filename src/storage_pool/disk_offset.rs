@@ -1,6 +1,5 @@
-use crate::size::StaticSize;
-use crate::vdev::Block;
 use serde::{ Serialize, Deserialize };
+use crate::{size::StaticSize, vdev::Block};
 use std::fmt;
 
 /// 12-bit disk ID, 52-bit block offset (see
